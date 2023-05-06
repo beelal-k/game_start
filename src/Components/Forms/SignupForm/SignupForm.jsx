@@ -5,33 +5,31 @@ import FaceIcon from "@mui/icons-material/Face";
 import "./SignupForm.css";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-// import Loader from "../../loader/Loader";
+import Loader from "../../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 ////////
-// import { clearErrors, register } from "../../../../actions/userAction";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useAlert } from "react-alert";
+import { clearErrors, register } from "../../../Actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import { useAlert } from "react-alert";
 
 const RegisterForm = () => {
 	const [startDate, setStartDate] = useState(new Date());
 	const registerTab = useRef(null);
-	const imgInpButton = useRef(null);
-	const chooseImgButton = useRef(null);
 	const [showPassword, setShowPassword] = useState(false);
 	/////////
 
-	// const dispatch = useDispatch();
-	// const alert = useAlert();
-	// const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const alert = useAlert();
+	const navigate = useNavigate();
 
 	/////////
 
-	// const { loading, isAuthenticated, error } = useSelector(
-	// 	(state) => state.user
-	// );
+	const { error, isAuthenticated, loading } = useSelector(
+		(state) => state.user
+	);
 
 	/////////
 
@@ -39,6 +37,8 @@ const RegisterForm = () => {
 		name: "",
 		email: "",
 		password: "",
+		gender: "",
+		dob: "",
 	});
 
 	const { name, email, password, gender } = user;
@@ -46,125 +46,116 @@ const RegisterForm = () => {
 	const registerSubmit = (e) => {
 		e.preventDefault();
 
-		let myForm = new FormData();
+		const userData = {
+			name: name.toString(),
+			password: password.toString(),
+			email: email.toString(),
+			gender: gender.toString(),
+			dob: startDate.toString(),
+		};
 
-		myForm.set("name", name);
-		myForm.set("email", email);
-		myForm.set("password", password);
-		myForm.set("gender", gedner);
-		myForm.set("dob", startDate);
+		// const { name2, password2, email2, gender2, dob2 } = userData;
 
-		dispatch(register(myForm));
+		dispatch(register(userData));
 	};
 
 	const registerDataChange = (e) => {
 		setUser({ ...user, [e.target.name]: [e.target.value] });
 	};
 
-	// useEffect(() => {
-	// 	if (error) {
-	// 		alert.error(error);
-	// 		dispatch(clearErrors());
-	// 	}
+	useEffect(() => {
+		if (error) {
+			alert.error(error);
+			dispatch(clearErrors());
+		}
 
-	// 	if (isAuthenticated) {
-	// 		navigate("/account");
-	// 	}
-	// }, [error, alert, dispatch, navigate, isAuthenticated]);
+		if (isAuthenticated) {
+			navigate("/account");
+		}
+	}, [error, dispatch, navigate]);
 
 	return (
 		<>
-			{/* {loading ? (
+			{loading ? (
 				<Loader />
-			) : ( */}
-			<form
-				className="register-form"
-				ref={registerTab}
-				onSubmit={registerSubmit}
-			>
-				<div className="register-name form-input">
-					<FaceIcon color="action" />
-					<input
-						type="text"
-						name="name"
-						value={name}
-						placeholder="Name"
-						required
-						onChange={registerDataChange}
-					/>
-				</div>
-				<div className="register-email form-input">
-					<MailOutlineIcon color="action" />
-					<input
-						type="email"
-						name="email"
-						value={email}
-						placeholder="Email"
-						required
-						onChange={registerDataChange}
-					/>
-				</div>
-				<div className="register-email form-input">
-					<MailOutlineIcon color="action" />
-					<input
-						type="text"
-						name="gender"
-						value={gender}
-						placeholder="Gender"
-						required
-						onChange={registerDataChange}
-					/>
-				</div>
-				<div className="register-email form-input">
-					<MailOutlineIcon color="action" />
-					<input
-						type="text"
-						name="gender"
-						value={gender}
-						placeholder="Gender"
-						required
-						onChange={registerDataChange}
-					/>
-				</div>
-
-				<DatePicker
-					selected={startDate}
-					onChange={(date) => setStartDate(date)}
-					className="form-input"
-				/>
-				<div className="register-password form-input">
-					<PasswordIcon color="action" />
-					<input
-						type={showPassword ? "text" : "password"}
-						name="password"
-						style={{ width: "217px" }}
-						value={password}
-						placeholder="Password"
-						required
-						onChange={registerDataChange}
-					/>
-					{showPassword ? (
-						<VisibilityOffIcon
-							color="action"
-							className="cursor-pointer"
-							onClick={() => {
-								setShowPassword(false);
-							}}
+			) : (
+				<form
+					className="register-form"
+					ref={registerTab}
+					onSubmit={registerSubmit}
+				>
+					<div className="register-name form-input">
+						<FaceIcon color="action" />
+						<input
+							type="text"
+							name="name"
+							value={name}
+							placeholder="Name"
+							required
+							onChange={registerDataChange}
 						/>
-					) : (
-						<VisibilityIcon
-							color="action"
-							className="cursor-pointer"
-							onClick={() => setShowPassword(true)}
+					</div>
+					<div className="register-email form-input">
+						<MailOutlineIcon color="action" />
+						<input
+							type="email"
+							name="email"
+							value={email}
+							placeholder="Email"
+							required
+							onChange={registerDataChange}
 						/>
-					)}
-				</div>
+					</div>
+					<div className="register-email form-input">
+						<MailOutlineIcon color="action" />
+						<input
+							type="text"
+							name="gender"
+							value={gender}
+							placeholder="Gender"
+							required
+							onChange={registerDataChange}
+						/>
+					</div>
 
-				<button type="submit" className="submitButton form-submit-btn">
-					Register
-				</button>
-			</form>
-			{/* )} */}
+					<DatePicker
+						selected={startDate}
+						onChange={(date) => setStartDate(date)}
+						className="form-input"
+					/>
+					<div className="register-password form-input">
+						<PasswordIcon color="action" />
+						<input
+							type={showPassword ? "text" : "password"}
+							name="password"
+							style={{ width: "217px" }}
+							value={password}
+							placeholder="Password"
+							required
+							onChange={registerDataChange}
+						/>
+						{showPassword ? (
+							<VisibilityOffIcon
+								color="action"
+								className="cursor-pointer"
+								onClick={() => {
+									setShowPassword(false);
+								}}
+							/>
+						) : (
+							<VisibilityIcon
+								color="action"
+								className="cursor-pointer"
+								onClick={() => setShowPassword(true)}
+							/>
+						)}
+					</div>
+
+					<button type="submit" className="submitButton form-submit-btn">
+						Register
+					</button>
+				</form>
+			)}
 		</>
 	);
 };
