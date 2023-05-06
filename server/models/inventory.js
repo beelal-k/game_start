@@ -1,30 +1,35 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define("user", {
-        name: {
+    const Inventory = sequelize.define("inventory", {
+        title: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        email: {
-            type: Sequelize.STRING,
-            validate: {
-                isEmail: true,
-            },
-            unique: true,
+        market_price: {
+            type: Sequelize.INTEGER,
             allowNull: false,
         },
-        password: {
-            type: Sequelize.STRING,
+        cost_price: {
+            type: Sequelize.INTEGER,
             allowNull: false,
         },
-        date_of_birth:{
-            type: Sequelize.DATEONLY,
+        margin:{
+            type: Sequelize.INTEGER,
             allowNull: true
         },
-        gender:{
+        inventory_type:{
             type: Sequelize.STRING,
             allowNull: false
+        },
+        minimum_age:{
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
+        quantity: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            defaultValue: 0
         }
     });
 
@@ -38,5 +43,5 @@ module.exports = (sequelize, Sequelize) => {
     //     password: "123"
     // });
 
-    return User;
+    return Inventory;
 };
