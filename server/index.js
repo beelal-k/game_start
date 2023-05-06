@@ -5,8 +5,11 @@ const bodyParser = require('body-parser')
 const cors = require('cors');
 const jwt = require("jsonwebtoken");
 const { sequelize } = require('./models');
+const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const multer = require('multer')
+const upload = multer({ dest: './uploads/' })
 
 const app = express()
 
@@ -14,6 +17,7 @@ app.use(cors({
     "origin": "http://localhost:5173",
 
 }));
+
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -25,7 +29,6 @@ const connection = mysql.createConnection({
     password: '',
     database: 'game_start'
 })
-
 
 sequelize.authenticate()
     .then(() => {
@@ -65,20 +68,8 @@ app.post('/login', async (req, res) => {
                         token: token,
                         user_id: user.id
                     });
-                    const options = {
-                        expires: new Date(
-                            Date.now() + 864000
-                        ),
-                        httpOnly: true
-                    }
 
-                    res.cookie('token', token, { maxAge: 900000, httpOnly: true });
-                    // res.status(200).cookie('token', token, options).json({
-                    //     success: true,
-                    //     user,
-                    //     token
-                    // })
-                    res.send(user);
+                    res.send({ user, token });
                 }
             }));
         }
@@ -263,7 +254,11 @@ app.post("/confirm-order", async (req, res) => {
     })
 })
 
-app.post("/create-inventory", async (req, res) => {
+app.post("/create-inventory", upload.single('file'), async (req, res) => {
+    let imageData = fs.readFileSync(req.file.path);
+    // db.profile.create({
+    //     profile_pic: imageData
+    // })
     await db.inventory.create({
         quantity: req.body.quantity,
         title: req.body.title,
@@ -271,12 +266,23 @@ app.post("/create-inventory", async (req, res) => {
         cost_price: req.body.cost_price,
         margin: req.body.market_price - req.body.cost_price,
         inventory_type: req.body.inventory_type,
-        minimum_age: req.body.minimum_age
+        minimum_age: req.body.minimum_age,
+        product_picture: imageData
     }).then(async (inven) => {
         res.send(inven);
     }).catch((err) => {
         res.send("Could not create inventory");
     })
+})
+
+app.post('/api/uploadProfilePic', upload.single('file'), function (req, res, next) {
+    var imageData = fs.readFileSync(req.file.path);
+    db.profile.create({
+        profile_pic: imageData
+    })
+        .then(image => {
+            res.json({ success: true, file1: req.file, data: image, update: false })
+        })
 })
 
 app.post("/delete-inventory", async (req, res) => {
@@ -338,6 +344,133 @@ app.get("/orders", async (req, res) => {
             res.send("Could not get all orders");
         })
 })
+
+app.get("/email-order-filter/:user_email", async (req, res) => {
+
+    const email = req.params.user_email;
+
+    await db.user.findOne({
+        where: { email: email }
+    }).then(async (user) => {
+        await db.order.findAll({
+            where: { id: user.id }
+        }).then((orders) => {
+            res.send(orders);
+        }).catch((err) => {
+            res.send(err);
+        })
+            .catch((err) => {
+                res.send(err);
+            })
+
+    }).catch((err) => {
+        res.send("Could not find any products with that email");
+    })
+})
+
+
+app.get("/week-order-filter", async (req, res) => {
+
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);  
+
+    await db.order.findAll(
+        {
+            where: {
+                createdAt: {
+                    [Op.between]: [weekAgo, Date.now()]
+                }
+            }
+        })
+        .then(async (orders) => {
+            res.send(orders);
+        }).catch((err) => {
+            res.send("Could not find any orders ordered within a week");
+        })
+})
+
+app.get("/name-order-filter/:user_name", async (req, res) => {
+
+    const name = req.params.user_name;
+
+    await db.user.findAll(
+        { attributes: ['id'] },
+        { where: { name: name } })
+        .then(async (user) => {
+            let orders = [];
+            user.map(async (each) => {
+                // userArray.push(each.id)
+                await db.order.findAll({
+                    where: { user_id: each.id }
+                }).then((user) => {
+                    orders.push(user)
+                })
+                res.send(orders);
+            })
+        }).catch((err) => {
+            res.send("Could not find any products with that email");
+        })
+})
+
+
+app.get("/status-order-filter/:order_status", async (req, res) => {
+
+    const status = req.params.order_status;
+
+    await db.order.findAll({
+        where: { order_status: status }
+    }).then(async (orders) => {
+        res.send(orders);
+    }).catch((err) => {
+        res.send("Could not find any orders with that status");
+    })
+
+})
+
+app.get("/date-order-filter/:order_date", async (req, res) => {
+
+    const date = req.params.date;
+
+    await db.order.findAll({
+        where: { order_status: status }
+    }).then(async (orders) => {
+        res.send(orders);
+    }).catch((err) => {
+        res.send("Could not find any orders with that status");
+    })
+
+})
+
+app.post("/blacklist-user/:id", async (req, res) => {
+
+    const id = req.params.id;
+
+    await db.user.update(
+        { blacklist: true },
+        { where: { id: id } }
+    )
+        .then(async (user) => {
+            res.send("Successfully blacklisted user");
+        }).catch((err) => {
+            res.send("Could not blacklist user");
+        })
+})
+
+
+app.post("/unblacklist-user/:id", async (req, res) => {
+
+    const id = req.params.id;
+
+    await db.user.update(
+        { blacklist: false },
+        { where: { id: id } }
+    )
+        .then(async (user) => {
+            res.send("Successfully removed user from blacklist");
+        }).catch((err) => {
+            res.send("Could not un-blacklist user");
+        })
+})
+
 
 db.sequelize.sync({ force: false }).then(function () {
     app.listen(port, function () {

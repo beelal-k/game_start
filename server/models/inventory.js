@@ -30,6 +30,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: true,
             defaultValue: 0
+        },
+        product_picture:{
+            type: Sequelize.BLOB,
+            allowNull: false
         }
     });
 

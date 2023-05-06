@@ -25,6 +25,11 @@ module.exports = (sequelize, Sequelize) => {
         gender:{
             type: Sequelize.STRING,
             allowNull: false
+        },
+        blacklist:{
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
     });
 
