@@ -5,12 +5,12 @@ const bodyParser = require('body-parser')
 const cors = require('cors');
 const jwt = require("jsonwebtoken");
 const { sequelize } = require('./models');
-let bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 const app = express()
 
 app.use(cors({
-    "origin" : "*",
+    "origin": "http://localhost:5173",
 
 }));
 
@@ -63,7 +63,19 @@ app.post('/login', async (req, res) => {
                         token: token,
                         user_id: user.id
                     });
-                    res.send({ user, token });
+                    const options = {
+                        expires: new Date(
+                            Date.now() + 864000
+                        ),
+                        httpOnly: true
+                    }
+
+                    res.status(200).cookie('token', token, options).json({
+                        success: true,
+                        user,
+                        token
+                    })
+                    // res.send({ user, token });
                 }
             }));
         }
@@ -159,7 +171,7 @@ app.get('/verify-user', async (req, res) => {
     ).then((token) => {
         // res.send(token[0].token);
 
-        if (token[0].token != "eyJhbGciOiJIUzI1NiJ9.MQ.ESunEs6acX2iz7Dq-NSXMrJIsr444yAtSRHJ2v5eeJM") {
+        if (token[0].token != req.body.token) {
             res.send(false);
         }
 
@@ -189,6 +201,7 @@ app.get('/', (req, res) => {
     // console.log(db);
 })
 
+let temp;
 app.post('/add-to-cart', async (req, res) => {
     await db.cart.create({
         quantity: req.body.quantity,
@@ -196,8 +209,9 @@ app.post('/add-to-cart', async (req, res) => {
         user_id: req.body.user_id
     }).then(async (cart) => {
         await db.order.findOne({
-            where: { user_id: req.body.user_id }
+            where: { user_id: cart.user_id }
         }).then(async (user) => {
+            temp = user;
             if (user == null) {
                 await db.order.create({
                     item_id: req.body.product_id,
@@ -209,24 +223,21 @@ app.post('/add-to-cart', async (req, res) => {
                 })
             }
             else {
-                // db.order.update({
-                //     where: {user_id}
-                // })
                 let items = user.item_id;
-                items = items.join("," + req.body.product_id);
+                // items.join("," + req.body.product_id);
                 await db.order.update(
-                    { item_id: items },
+                    { item_id: items.join(",", req.body.product_id) },
                     { where: { user_id: req.body.user_id } }
                 ).then((order) => {
-                    res.send(order);
+                    res.send("Order");
                 }).catch((err) => {
-                    res.send(err);
+                    res.send("Error occured");
                 })
             }
         })
         // res.send(cart);
     }).catch((err) => {
-        res.send(err);
+        res.send("Error");
     })
 })
 
@@ -246,6 +257,82 @@ app.post("/confirm-order", async (req, res) => {
     }).catch((err) => {
         res.send("Could not complete payment");
     })
+})
+
+app.post("/create-inventory", async (req, res) => {
+    await db.inventory.create({
+        quantity: req.body.quantity,
+        title: req.body.title,
+        market_price: req.body.market_price,
+        cost_price: req.body.cost_price,
+        margin: req.body.market_price - req.body.cost_price,
+        inventory_type: req.body.inventory_type,
+        minimum_age: req.body.minimum_age
+    }).then(async (inven) => {
+        res.send(inven);
+    }).catch((err) => {
+        res.send("Could not create inventory");
+    })
+})
+
+app.post("/delete-inventory", async (req, res) => {
+    await db.inventory.destroy({
+        where: { id: req.body.product_id }
+    }).then(async (inven) => {
+        res.send("Successfully deleted inventory");
+    }).catch((err) => {
+        res.send("Could not delete inventory");
+    })
+})
+
+app.post("/update-inventory", async (req, res) => {
+    await db.inventory.update(
+        {
+            quantity: req.body.quantity,
+            title: req.body.title,
+            market_price: req.body.market_price,
+            cost_price: req.body.cost_price,
+            margin: req.body.market_price - req.body.cost_price,
+            inventory_type: req.body.inventory_type,
+            minimum_age: req.body.minimum_age
+        },
+        { where: { id: req.body.product_id } }
+    ).then(async (inven) => {
+        res.send("Successfully updated inventory");
+    }).catch((err) => {
+        res.send("Could not update inventory");
+    })
+})
+
+app.get("/all-inventory", async (req, res) => {
+    await db.inventory.findAll()
+        .then(async (inven) => {
+            res.send(inven);
+        }).catch((err) => {
+            res.send("Could not get inventory");
+        })
+})
+
+app.get("/inventory/:id", async (req, res) => {
+
+    const id = req.params.id;
+
+    await db.inventory.findOne(
+        { where: { id: id } }
+    ).then(async (inven) => {
+        res.send(inven);
+    }).catch((err) => {
+        res.send("Could not get inventory");
+    })
+})
+
+app.get("/orders", async (req, res) => {
+    await db.order.findAll()
+        .then(async (orders) => {
+            res.send(orders)
+        }).catch((err) => {
+            res.send("Could not get all orders");
+        })
 })
 
 db.sequelize.sync({ force: false }).then(function () {
