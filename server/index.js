@@ -37,13 +37,13 @@ app.post('/login', async (req, res) => {
     console.log("req:", req.body);
 
     db.user.findOne({
-        where: { email: "bilal@gmail.com" }
+        where: { email: req.body.email }
     }).then((user) => {
         if (user == null) {
             res.send('Email not found');
         }
         else {
-            if (bcrypt.compare("123", user.password, function (err, resp) {
+            if (bcrypt.compare(req.body.password, user.password, function (err, resp) {
                 if (!resp) {
                     res.send("Incorrect Password");
                 }
@@ -67,12 +67,14 @@ app.post('/login', async (req, res) => {
 
 app.post('/signup', async (req, res) => {
 
+    console.log(req.body)
+
     db.user.create({
-        name: "Bilal",
-        email: "bilal@gmail.com",
-        gender: "male",
-        date_of_birth: "2002-9-16",
-        password: bcrypt.hashSync("123", 8)
+        name: req.body.name,
+        email: req.body.email,
+        gender: req.body.gender,
+        date_of_birth: req.body.dob,
+        password: bcrypt.hashSync(req.body.password, 8)
     }).then((user) => {
         res.send(user);
     }).catch(function (err) {
