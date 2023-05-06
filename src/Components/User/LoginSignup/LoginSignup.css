@@ -1,0 +1,17 @@
+.form-box {
+	margin-top: 80px;
+	width: 320px;
+	height: 600px;
+	background-color: #e5e5e5;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	overflow: hidden !important;
+}
+
+@media screen and (max-width: 600px) {
+	.form-box {
+		top: 310px;
+	}
+}
