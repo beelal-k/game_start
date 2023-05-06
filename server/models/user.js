@@ -1,6 +1,4 @@
 const Sequelize = require('sequelize');
-// const {sequelize, Sequelize} = require('../models/index.js');
-
 
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("user", {
@@ -24,6 +22,12 @@ module.exports = (sequelize, Sequelize) => {
     //   User.associate = function (models) {
     //     User.hasMany(models.budget);
     //   };
+
+    // User.create({
+    //     name: "Bilal",
+    //     email: "bilal@gmail.com",
+    //     password: "123"
+    // });
 
     return User;
 };
