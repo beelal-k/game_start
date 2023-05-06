@@ -7,6 +7,11 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "nodemon": "^2.0.22"
+    "init": "^0.1.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.2.4",
+    "nodemon": "^2.0.22",
+    "sequelize": "^6.31.1",
+    "sequelize-cli": "^6.6.0"
   }
 }
