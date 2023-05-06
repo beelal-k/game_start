@@ -6,6 +6,7 @@ const cors = require('cors');
 const jwt = require("jsonwebtoken");
 const { sequelize } = require('./models');
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(cors({
 }));
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 const port = 3000
 
 const connection = mysql.createConnection({
@@ -70,12 +72,13 @@ app.post('/login', async (req, res) => {
                         httpOnly: true
                     }
 
-                    res.status(200).cookie('token', token, options).json({
-                        success: true,
-                        user,
-                        token
-                    })
-                    // res.send({ user, token });
+                    res.cookie('token', token, { maxAge: 900000, httpOnly: true });
+                    // res.status(200).cookie('token', token, options).json({
+                    //     success: true,
+                    //     user,
+                    //     token
+                    // })
+                    res.send(user);
                 }
             }));
         }
@@ -197,7 +200,8 @@ app.post('/update-review', async (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.send('Hello Worlds!')
+    const token = req.cookies
+    res.json(token);
     // console.log(db);
 })
 
