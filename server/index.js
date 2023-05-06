@@ -1,10 +1,14 @@
 const express = require('express')
 const mysql = require('mysql2')
-const app = express()
-const port = 3000
 const db = require("./models");
-const { User } = require('./models/user');
 const { sequelize } = require('./models');
+let bcrypt = require("bcrypt");
+const { JSON } = require('sequelize')
+
+const app = express()
+app.use(express.json());
+const port = 3000
+
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -12,9 +16,6 @@ const connection = mysql.createConnection({
     database: 'game_start'
 })
 
-app.use(express.json());
-let bcrypt = require("bcrypt");
-const { JSON } = require('sequelize')
 
 sequelize.authenticate()
     .then(() => {
@@ -29,60 +30,57 @@ app.get('/users', async (req, res) => {
         .then((users) => {
             res.send(users);
         })
-
-    // db.user.create({
-    //     name: "Muneeb",
-    //     email: "muneeb@gmail.com",
-    //     password: bcrypt.hashSync("123", 8)
-    // }).then(function (item) {
-    //     res.json({
-    //         "Message": "Created user!",
-    //         "Item": item
-    //     });
-    // }).catch(function (err) {
-    //     // handle error;
-    //     res.json(err.errors[0].message);
-    // });
-
-
 });
 
-app.get('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     // db.sequelize.sync().then(function () {
-    // console.log("req:", req.body);
+    console.log("req:", req.body);
     db.user.findOne({
-        where: { email: "muneeb@gmail.com" }
+        where: { email: "bilal@gmail.com" }
     }).then((user) => {
+        // if(user.password)
         if (user == null) {
             res.send('Email not found');
         }
-        res.send(user);
+        else {
+            if (bcrypt.compare("123", user.password, function (err, resp) {
+                if(!resp){
+                    res.send("Incorrect Password");
+                }
+                res.send(user);
+            }));
+        }
+        // res.send(user);
 
+    }).catch((err) => {
+        res.json("Error occured");
     })
 
 
 })
 
 app.post('/signup', async (req, res) => {
-    // db.sequelize.sync().then(function () {
-    // console.log("req:", req.body);
+
     db.user.create({
-        name: "Bilal",
-        email: "bilal@gmail.com",
-        gender: "Male",
-        date_of_birth: "2002-9-16",
-        password: bcrypt.hashSync("123", 8)
+        name: req.body.name,
+        email: req.body.email,
+        gender: req.body.gender,
+        date_of_birth: req.body.dob,
+        password: bcrypt.hashSync(req.body.password, 8)
     }).then((user) => {
         res.send(user);
-    })
+    }).catch(function (err) {
+        res.json(err.errors[0].message);
+    });
 
 
 })
 
 
+
 app.get('/', (req, res) => {
     res.send('Hello Worlds!')
-    console.log(db);
+    // console.log(db);
 })
 
 db.sequelize.sync({ force: false }).then(function () {
