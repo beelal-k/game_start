@@ -1,6 +1,7 @@
 const express = require('express')
 const mysql = require('mysql2')
 const db = require("./models");
+const jwt = require("jsonwebtoken");
 const { sequelize } = require('./models');
 let bcrypt = require("bcrypt");
 const { JSON } = require('sequelize')
@@ -33,24 +34,30 @@ app.get('/users', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    // db.sequelize.sync().then(function () {
+
     console.log("req:", req.body);
+
     db.user.findOne({
         where: { email: "bilal@gmail.com" }
     }).then((user) => {
-        // if(user.password)
         if (user == null) {
             res.send('Email not found');
         }
         else {
             if (bcrypt.compare("123", user.password, function (err, resp) {
-                if(!resp){
+                if (!resp) {
                     res.send("Incorrect Password");
                 }
-                res.send(user);
+
+                const token = jwt.sign(user.id, "SECRET_KEY_!@#");
+
+                db.token.create({
+                    token: token,
+                    user_id: user.id
+                });
+                res.send({ user, token });
             }));
         }
-        // res.send(user);
 
     }).catch((err) => {
         res.json("Error occured");
@@ -62,11 +69,11 @@ app.post('/login', async (req, res) => {
 app.post('/signup', async (req, res) => {
 
     db.user.create({
-        name: req.body.name,
-        email: req.body.email,
-        gender: req.body.gender,
-        date_of_birth: req.body.dob,
-        password: bcrypt.hashSync(req.body.password, 8)
+        name: "Bilal",
+        email: "bilal@gmail.com",
+        gender: "male",
+        date_of_birth: "2002-9-16",
+        password: bcrypt.hashSync("123", 8)
     }).then((user) => {
         res.send(user);
     }).catch(function (err) {
