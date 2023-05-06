@@ -11,12 +11,21 @@ module.exports = (sequelize, Sequelize) => {
             validate: {
                 isEmail: true,
             },
+            unique: true,
             allowNull: false,
         },
         password: {
             type: Sequelize.STRING,
             allowNull: false,
         },
+        date_of_birth:{
+            type: Sequelize.DATEONLY,
+            allowNull: true
+        },
+        gender:{
+            type: Sequelize.STRING,
+            allowNull: false
+        }
     });
 
     //   User.associate = function (models) {
