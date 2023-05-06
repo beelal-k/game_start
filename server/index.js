@@ -4,7 +4,6 @@ const db = require("./models");
 const jwt = require("jsonwebtoken");
 const { sequelize } = require('./models');
 let bcrypt = require("bcrypt");
-const { JSON } = require('sequelize')
 
 const app = express()
 app.use(express.json());
@@ -80,10 +79,98 @@ app.post('/signup', async (req, res) => {
         res.json(err.errors[0].message);
     });
 
+})
+
+app.post('/create-review', async (req, res) => {
+
+    db.review.create({
+        product_id: 1,
+        user_id: 1,
+        rating: 3,
+        comment: "Amazing product",
+    }).then((rev) => {
+        res.send(rev);
+    }).catch(function (err) {
+        res.json(err.errors[0].message);
+    });
 
 })
 
+app.post('/delete-review', async (req, res) => {
 
+    db.review.destroy(
+        { where: { id: 1 } }
+    ).then((rev) => {
+        res.send("Deleted review successfully!");
+    }).catch(function (err) {
+        res.json(err.errors[0].message);
+    });
+
+})
+
+app.get('/review/:id', async (req, res) => {
+
+    const id = req.params.id
+    db.review.findOne(
+        { where: { id: id } }
+    ).then((rev) => {
+        res.send(rev);
+    }).catch(function (err) {
+        res.json(err.errors[0].message);
+    });
+
+})
+
+app.get('/product-reviews/:id', async (req, res) => {
+
+    const id = req.params.id;
+
+    db.review.findAll(
+        { where: { product_id: id } }
+    ).then((rev) => {
+        res.send(rev);
+    }).catch(function (err) {
+        res.json(err.errors[0].message);
+    });
+
+})
+
+app.get('/verify-user', async (req, res) => {
+
+    // const id = req.params.id;
+
+    db.token.findAll({
+        limit: 1,
+        where: { user_id: 1 },
+        order: [['createdAt', 'DESC']]
+    }
+    ).then((token) => {
+        // res.send(token[0].token);
+
+        if (token[0].token != "eyJhbGciOiJIUzI1NiJ9.MQ.ESunEs6acX2iz7Dq-NSXMrJIsr444yAtSRHJ2v5eeJM") {
+            res.send(false);
+        }
+
+        res.send(true);
+        
+    }).catch(function (err) {
+        res.json("An error occured");
+    });
+
+})
+
+app.post('/update-review', async (req, res) => {
+
+    db.review.update(
+        { comment: "This is amazing again!" },
+        { where: { id: 1 } }
+    ).then((rev) => {
+        res.send("Updated review successfully!");
+    }).catch(function (err) {
+        res.json(err.errors[0].message);
+    });
+
+})
 
 app.get('/', (req, res) => {
     res.send('Hello Worlds!')
