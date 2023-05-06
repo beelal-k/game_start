@@ -10,7 +10,7 @@ let bcrypt = require("bcrypt");
 const app = express()
 
 app.use(cors({
-    origin: '*',
+    "origin" : "*",
 
 }));
 
@@ -187,6 +187,65 @@ app.post('/update-review', async (req, res) => {
 app.get('/', (req, res) => {
     res.send('Hello Worlds!')
     // console.log(db);
+})
+
+app.post('/add-to-cart', async (req, res) => {
+    await db.cart.create({
+        quantity: req.body.quantity,
+        product_id: req.body.product_id,
+        user_id: req.body.user_id
+    }).then(async (cart) => {
+        await db.order.findOne({
+            where: { user_id: req.body.user_id }
+        }).then(async (user) => {
+            if (user == null) {
+                await db.order.create({
+                    item_id: req.body.product_id,
+                    order_status: "Pending",
+                    user_id: req.body.user_id,
+                    order_date: Date.now()
+                }).then((order) => {
+                    res.send({ cart, order });
+                })
+            }
+            else {
+                // db.order.update({
+                //     where: {user_id}
+                // })
+                let items = user.item_id;
+                items = items.join("," + req.body.product_id);
+                await db.order.update(
+                    { item_id: items },
+                    { where: { user_id: req.body.user_id } }
+                ).then((order) => {
+                    res.send(order);
+                }).catch((err) => {
+                    res.send(err);
+                })
+            }
+        })
+        // res.send(cart);
+    }).catch((err) => {
+        res.send(err);
+    })
+})
+
+app.post("/confirm-order", async (req, res) => {
+    await db.payment.create({
+        card_number: req.body.card_number,
+        card_name: req.body.card_name,
+        card_expiry: req.body.card_expiry,
+        payment_status: "Paid",
+        payment_date: Date.now()
+    }).then(async (payment) => {
+        await db.order.update(
+            { order_status: "Confirmed" },
+            { where: { user_id: req.body.user_id } }
+        )
+        res.send(payment);
+    }).catch((err) => {
+        res.send("Could not complete payment");
+    })
 })
 
 db.sequelize.sync({ force: false }).then(function () {

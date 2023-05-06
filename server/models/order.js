@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = (sequelize, Sequelize) => {
     const Order = sequelize.define("order", {
         item_id: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING,
             allowNull: false
         },
         order_date: {
@@ -20,7 +20,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         payment_id:{
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: true
         }
     });
 
