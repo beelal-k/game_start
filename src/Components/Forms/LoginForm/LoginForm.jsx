@@ -29,7 +29,7 @@ const LoginForm = () => {
 		dispatch(login(loginEmail, loginPassword));
 	};
 
-	const redirect = location.search ? location.search.split("=")[1] : "account";
+	const redirect = "/";
 
 	useEffect(() => {
 		if (error) {
@@ -38,7 +38,7 @@ const LoginForm = () => {
 		}
 
 		if (isAuthenticated) {
-			navigate(`/${redirect}`);
+			navigate("/");
 		}
 	}, [error, dispatch, navigate, isAuthenticated, redirect]);
 
@@ -52,7 +52,7 @@ const LoginForm = () => {
 						<MailOutlineIcon color="action" />
 						<input
 							type="email"
-							name="login-email"
+							name="email"
 							value={loginEmail}
 							placeholder="Email"
 							required
@@ -63,7 +63,7 @@ const LoginForm = () => {
 						<PasswordIcon color="action" />
 						<input
 							type="password"
-							name="login-password"
+							name="password"
 							value={loginPassword}
 							placeholder="Password"
 							required

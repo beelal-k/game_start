@@ -54,8 +54,6 @@ const RegisterForm = () => {
 			dob: startDate.toString(),
 		};
 
-		// const { name2, password2, email2, gender2, dob2 } = userData;
-
 		dispatch(register(userData));
 	};
 
@@ -70,7 +68,7 @@ const RegisterForm = () => {
 		}
 
 		if (isAuthenticated) {
-			navigate("/account");
+			navigate("/");
 		}
 	}, [error, dispatch, navigate]);
 

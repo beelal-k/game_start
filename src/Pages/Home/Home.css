@@ -1,3 +1,83 @@
 #home {
 	margin-top: 120px;
 }
+.section-home {
+	margin: auto;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	top: 100px;
+	width: 100%;
+	height: auto;
+}
+
+.container {
+	display: flex;
+	margin: 2vmax auto;
+	width: 90vw;
+	justify-content: space-evenly;
+	max-width: 100%;
+	align-items: center;
+}
+
+.productCard {
+	display: flex;
+	flex-direction: column;
+	text-decoration: none;
+	color: rgb(48, 48, 48);
+	margin: 2vmax;
+	transition: all 0.5s;
+	padding-bottom: 0.5vmax;
+}
+
+.productCard > div {
+	margin: 0.5vmax;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.productCard > p {
+	font-size: 1.2vmax;
+	margin: 1vmax 0.5vmax;
+	margin-bottom: 0;
+}
+
+.productCard > span {
+	font-size: 1.2vmax;
+	margin: 0.5vmax 0.5vmax;
+	margin-bottom: 0;
+	color: var(--main-color);
+	font-size: 1vmax;
+}
+
+.productCard:hover {
+	box-shadow: 0 0 5px rgba(15, 15, 15, 0.26);
+	transform: translateY(-1vmax);
+}
+
+@media screen and (max-width: 600px) {
+	.productCard > p {
+		font-size: 1.7vmax;
+	}
+
+	.productCard > div {
+		margin: 0vmax;
+	}
+
+	.productCard > span {
+		font-size: 1.5vmax;
+	}
+
+	.productCard > div > span {
+		margin: 2vmax 0.8vmax;
+	}
+
+	.productCard {
+		width: 25vmax !important;
+	}
+	.productCard > img {
+		width: 25vmax !important;
+	}
+}
