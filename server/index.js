@@ -1,12 +1,20 @@
 const express = require('express')
 const mysql = require('mysql2')
 const db = require("./models");
+const bodyParser = require('body-parser')
+const cors = require('cors');
 const jwt = require("jsonwebtoken");
 const { sequelize } = require('./models');
 let bcrypt = require("bcrypt");
 
 const app = express()
-app.use(express.json());
+
+app.use(cors({
+    origin: '*',
+
+}));
+
+app.use(bodyParser.json());
 const port = 3000
 
 const connection = mysql.createConnection({
@@ -34,32 +42,34 @@ app.get('/users', async (req, res) => {
 
 app.post('/login', async (req, res) => {
 
-    console.log("req:", req.body);
+    console.log("req:", req.body.email);
 
-    db.user.findOne({
+    await db.user.findOne({
         where: { email: req.body.email }
     }).then((user) => {
         if (user == null) {
             res.send('Email not found');
         }
         else {
-            if (bcrypt.compare(req.body.password, user.password, function (err, resp) {
+            if (bcrypt.compare(req.body.password, user.password, async function (err, resp) {
                 if (!resp) {
                     res.send("Incorrect Password");
                 }
+                else {
 
-                const token = jwt.sign(user.id, "SECRET_KEY_!@#");
+                    const token = jwt.sign(user.id, "SECRET_KEY_!@#");
 
-                db.token.create({
-                    token: token,
-                    user_id: user.id
-                });
-                res.send({ user, token });
+                    await db.token.create({
+                        token: token,
+                        user_id: user.id
+                    });
+                    res.send({ user, token });
+                }
             }));
         }
 
     }).catch((err) => {
-        res.json("Error occured");
+        res.json("An error occured");
     })
 
 
@@ -69,7 +79,7 @@ app.post('/signup', async (req, res) => {
 
     console.log(req.body)
 
-    db.user.create({
+    await db.user.create({
         name: req.body.name,
         email: req.body.email,
         gender: req.body.gender,
@@ -78,7 +88,7 @@ app.post('/signup', async (req, res) => {
     }).then((user) => {
         res.send(user);
     }).catch(function (err) {
-        res.json(err.errors[0].message);
+        res.json("Could not create account");
     });
 
 })
@@ -154,7 +164,7 @@ app.get('/verify-user', async (req, res) => {
         }
 
         res.send(true);
-        
+
     }).catch(function (err) {
         res.json("An error occured");
     });
