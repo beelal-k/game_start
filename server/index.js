@@ -1,13 +1,15 @@
 const express = require("express");
 const mysql = require("mysql2");
 const db = require("./models");
+const bodyParser = require('body-parser')
+const cors = require('cors');
 const jwt = require("jsonwebtoken");
 const { sequelize } = require("./models");
 let bcrypt = require("bcrypt");
 
-const app = express();
+const app = express()
 app.use(express.json());
-const port = 3000;
+const port = 3000
 
 const connection = mysql.createConnection({
 	host: "localhost",
@@ -31,61 +33,56 @@ app.get("/users", async (req, res) => {
 	});
 });
 
-app.post("/login", async (req, res) => {
-	console.log("req:", req.body);
+app.post('/login', async (req, res) => {
 
-	db.user
-		.findOne({
-			where: { email: req.body.email },
-		})
-		.then((user) => {
-			if (user == null) {
-				res.send("Email not found");
-			} else {
-				if (
-					bcrypt.compare(
-						req.body.password,
-						user.password,
-						function (err, resp) {
-							if (!resp) {
-								res.send("Incorrect Password");
-							}
+    console.log("req:", req.body);
 
-							const token = jwt.sign(user.id, "SECRET_KEY_!@#");
+    db.user.findOne({
+        where: { email: req.body.email }
+    }).then((user) => {
+        if (user == null) {
+            res.send('Email not found');
+        }
+        else {
+            if (bcrypt.compare(req.body.password, user.password, function (err, resp) {
+                if (!resp) {
+                    res.send("Incorrect Password");
+                }
 
-							db.token.create({
-								token: token,
-								user_id: user.id,
-							});
-							res.send({ user, token });
-						}
-					)
-				);
-			}
-		})
-		.catch((err) => {
-			res.json("Error occured");
-		});
-});
+                const token = jwt.sign(user.id, "SECRET_KEY_!@#");
+
+                db.token.create({
+                    token: token,
+                    user_id: user.id
+                });
+                res.send({ user, token });
+            }));
+        }
+
+    }).catch((err) => {
+        res.json("Error occured");
+    })
 
 app.post("/signup", async (req, res) => {
 	console.log(req.body);
 
-	db.user
-		.create({
-			name: req.body.name,
-			email: req.body.email,
-			gender: req.body.gender,
-			date_of_birth: req.body.dob,
-			password: bcrypt.hashSync(req.body.password, 8),
-		})
-		.then((user) => {
-			res.send(user);
-		})
-		.catch(function (err) {
-			res.json(err.errors[0].message);
-		});
-});
+})
+
+app.post('/signup', async (req, res) => {
+
+    console.log(req.body)
+
+    db.user.create({
+        name: req.body.name,
+        email: req.body.email,
+        gender: req.body.gender,
+        date_of_birth: req.body.dob,
+        password: bcrypt.hashSync(req.body.password, 8)
+    }).then((user) => {
+        res.send(user);
+    }).catch(function (err) {
+        res.json(err.errors[0].message);
+    });
 
 app.post("/create-review", async (req, res) => {
 	db.review
@@ -158,12 +155,11 @@ app.get("/verify-user", async (req, res) => {
 				res.send(false);
 			}
 
-			res.send(true);
-		})
-		.catch(function (err) {
-			res.json("An error occured");
-		});
-});
+        res.send(true);
+        
+    }).catch(function (err) {
+        res.json("An error occured");
+    });
 
 app.post("/update-review", async (req, res) => {
 	db.review
@@ -181,8 +177,8 @@ app.get("/", (req, res) => {
 	// console.log(db);
 });
 
-db.sequelize.sync({ force: true }).then(function () {
-	app.listen(port, function () {
-		console.log("server is successfully running!");
-	});
+db.sequelize.sync({ force: false }).then(function () {
+    app.listen(port, function () {
+        console.log("server is successfully running!");
+    });
 });
