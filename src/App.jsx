@@ -8,6 +8,7 @@ import LoginSignup from "./Components/User/LoginSignup/LoginSignup";
 // import { Dashboard } from "@mui/icons-material";
 import Dashboard from './Pages/Home/Dashboard.jsx'
 import CreateInventory from "./Pages/CreateInventory";
+import Inventory from "./Pages/Inventory";
 
 function App() {
 	return (
@@ -20,6 +21,7 @@ function App() {
 					<Route element={<Age/>} path="/age" exact></Route>
 					<Route element={<CreateInventory/>} path="/create-inventory" exact></Route>
 					<Route element={<Dashboard/>} path="/dashboard" exact></Route>
+					<Route element={<Inventory/>} path="/inventory" exact></Route>
 				</Routes>
 			</Router>
 		</>

@@ -1,0 +1,51 @@
+.sidebar {
+    /* border: 1px solid red; */
+    position: fixed;
+    top: 80px;
+    /* width: 200px; */
+    /* padding-top: 0px; */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 500;
+    background-color: #012131;
+    color: white;
+    /* padding-left: 40px; */
+    height: 100vh;
+    position: relative;
+    text-align: center;
+}
+
+.sidebar p {
+    /* border: 1px solid red; */
+    width: 100%;
+    cursor: pointer;
+    /* height: 35px; */
+    padding: 20px;
+    transition: 0.2s ease-in-out;
+}
+
+
+.none {
+    text-decoration: none;
+    color: white;
+
+}
+
+
+/* .sidebar p::after{
+    content: "";
+    width:150px;
+    background-color: #023f5e;
+    height: 1px;
+    position: absolute;
+    margin-top: 35px;
+    left: 18px;
+
+} */
+
+.sidebar p:hover {
+    background-color: #01324b;
+    transition: 0.2s ease-in-out;
+}
