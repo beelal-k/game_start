@@ -13,7 +13,7 @@ const ProductCard = ({ product, width }) => {
 	const { error, reviews } = useSelector((state) => state.reviews);
 
 	const options = {
-		value: reviews[0].rating,
+		value: 4,
 		readOnly: true,
 		size: "large",
 		precision: 0.5,
@@ -29,7 +29,7 @@ const ProductCard = ({ product, width }) => {
 		}
 
 		dispatch(getAllReviews(link));
-	}, [dispatch, error, alert]);
+	}, [dispatch, alert, link]);
 
 	return (
 		<Link
@@ -48,10 +48,21 @@ const ProductCard = ({ product, width }) => {
 						marginLeft: "10px",
 					}}
 				>
-					({reviews.lenght} Reviews)
+					({1000} Reviews)
 				</span>
 			</div>
-			<span>{`$${product.market_price}`}</span>
+			<span>
+				<strong>Market Price: </strong>
+				{`PKR ${product.market_price}`}
+			</span>
+			<span>
+				<strong>Type: </strong>
+				{`${product.inventory_type}`}
+			</span>
+			<span>
+				<strong>Minimum Age: </strong>
+				{`${product.minimum_age}`}
+			</span>
 		</Link>
 	);
 };

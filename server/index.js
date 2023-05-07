@@ -6,7 +6,11 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const { sequelize } = require("./models");
 const bcrypt = require("bcrypt");
-
+const multer = require("multer");
+const upload = multer({
+	dest: "./uploads/",
+});
+const fs = require("fs");
 const app = express();
 
 app.use(
@@ -158,13 +162,13 @@ app.get("/product-reviews/:id", async (req, res) => {
 		});
 });
 
-app.get("/verify-user", async (req, res) => {
-	// const id = req.params.id;
+app.post("/verify-user/:id", async (req, res) => {
+	const id = req.params.id;
 
 	db.token
 		.findAll({
 			limit: 1,
-			where: { user_id: 1 },
+			where: { user_id: id },
 			order: [["createdAt", "DESC"]],
 		})
 		.then((token) => {
@@ -267,7 +271,8 @@ app.post("/confirm-order", async (req, res) => {
 		});
 });
 
-app.post("/create-inventory", async (req, res) => {
+app.post("/create-inventory", upload.single("file"), async (req, res) => {
+	let imageData = fs.readFileSync(req.file.path);
 	await db.inventory
 		.create({
 			quantity: req.body.quantity,
@@ -277,6 +282,7 @@ app.post("/create-inventory", async (req, res) => {
 			margin: req.body.market_price - req.body.cost_price,
 			inventory_type: req.body.inventory_type,
 			minimum_age: req.body.minimum_age,
+			product_picture: imageData,
 		})
 		.then(async (inven) => {
 			res.send(inven);

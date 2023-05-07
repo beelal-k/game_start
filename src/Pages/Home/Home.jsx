@@ -6,11 +6,29 @@ import { useSelector, useDispatch } from "react-redux";
 import Loader from "../../Components/Loader/Loader";
 import { useAlert } from "react-alert";
 import { getInventory, clearErrors } from "../../Actions/inventoryActions";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
 	const alert = useAlert();
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { error, loading, products } = useSelector((state) => state.inventory);
+
+	//get cookie and check auth
+	const token = Cookies.get("token") || "anything";
+	const userId = Cookies.get("user");
+
+	const data = {
+		token,
+	};
+
+	const config = {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	};
 
 	useEffect(() => {
 		if (error) {
@@ -18,8 +36,26 @@ const Home = () => {
 			dispatch(clearErrors());
 		}
 
+		try {
+			const isAuth = axios.post(
+				`http://localhost:3000/verify-user/${userId}`,
+				data,
+				config
+			);
+
+			isAuth.then((c) => {
+				console.log(c.data);
+				console.log(c.data);
+				if (!c.data || c.data == "An error occured") {
+					navigate("/login");
+				}
+			});
+		} catch (err) {
+			console.log(err);
+		}
+
 		dispatch(getInventory());
-	}, [dispatch, error, alert]);
+	}, [dispatch, alert]);
 
 	return (
 		<>

@@ -29,8 +29,6 @@ const LoginForm = () => {
 		dispatch(login(loginEmail, loginPassword));
 	};
 
-	const redirect = "/";
-
 	useEffect(() => {
 		if (error) {
 			alert.error(error);
@@ -40,7 +38,7 @@ const LoginForm = () => {
 		if (isAuthenticated) {
 			navigate("/");
 		}
-	}, [error, dispatch, navigate, isAuthenticated, redirect]);
+	}, [error, dispatch, navigate, isAuthenticated]);
 
 	return (
 		<>

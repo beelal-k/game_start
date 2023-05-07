@@ -8,13 +8,12 @@ import {
 	LOGIN_FAIL,
 } from "../Constants/userConstants";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 // LOGIN
 export const login = (email, password) => async (dispatch) => {
 	try {
 		dispatch({ type: LOGIN_REQUEST });
-
-		console.log(email, password);
 
 		const config = { headers: { "Content-Type": "application/json" } };
 
@@ -23,6 +22,12 @@ export const login = (email, password) => async (dispatch) => {
 			{ email, password },
 			config
 		);
+
+		const token = user.data.token;
+		const userId = user.data.user.id;
+
+		Cookies.set("token", token, { expires: 7 });
+		Cookies.set("user", userId, { expires: 7 });
 
 		dispatch({ type: LOGIN_SUCCESS, payload: user.data });
 	} catch (error) {
