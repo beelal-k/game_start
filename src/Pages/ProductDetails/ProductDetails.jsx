@@ -7,7 +7,7 @@ import Loader from "../../Components/Loader/Loader";
 import { useParams } from "react-router-dom";
 import { useAlert } from "react-alert";
 import img from "../../assets/1.jpg";
-// import { addItemsToCart } from "../../actions/cartAction";
+import { addItemsToCart } from "../../Actions/inventoryActions";
 import {
 	Dialog,
 	DialogActions,

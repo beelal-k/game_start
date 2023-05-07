@@ -12,6 +12,10 @@ import {
 	CREATE_INVENT_REQUEST,
 	CREATE_INVENT_SUCCESS,
 	CLEAR_ERRORS,
+	ADD_CART_REQUEST,
+	REMOVE_CART_ITEM,
+	ADD_CART_SUCCESS,
+	ADD_CART_FAIL,
 } from "../Constants/inventoryConstants";
 import axios from "axios";
 
@@ -63,7 +67,6 @@ export const getProductDetails = (id) => async (dispatch) => {
 };
 
 //create new product
-// NEW PRODUCT
 export const createProduct = (productData) => async (dispatch) => {
 	try {
 		dispatch({
@@ -90,6 +93,30 @@ export const createProduct = (productData) => async (dispatch) => {
 			payload: error,
 		});
 	}
+};
+
+// ADD ITEMS TO CART
+export const addItemsToCart = (id, quantity) => async (dispatch, getState) => {
+	const { data } = await axios.get(`http://localhost:3000/inventory/${id}`);
+
+	dispatch({
+		type: ADD_CART_REQUEST,
+		payload: {
+			id: data.id,
+			title: data.title,
+			price: data.market_price,
+			image: data.img,
+			quantity,
+		},
+	});
+
+	localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+//REMOVE FROM CART
+export const removeItemsFromCart = (id) => async (dispatch, getState) => {
+	dispatch({ type: REMOVE_CART_ITEM, payload: id });
+	localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
 
 // Clear Errors

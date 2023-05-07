@@ -273,6 +273,8 @@ app.post("/confirm-order", async (req, res) => {
 
 app.post("/create-inventory", upload.single("file"), async (req, res) => {
 	let imageData = fs.readFileSync(req.file.path);
+	console.log("body:", req.body);
+	console.log("file:", req.file);
 	await db.inventory
 		.create({
 			quantity: req.body.quantity,

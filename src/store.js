@@ -5,6 +5,7 @@ import {
 	productDetailsReducer,
 	reviewsReducer,
 	newInventoryReducer,
+	cartReducer,
 } from "./Reducers/inventoryReducer";
 
 export const store = configureStore({
@@ -14,5 +15,6 @@ export const store = configureStore({
 		reviews: reviewsReducer,
 		productDetails: productDetailsReducer,
 		newInventory: newInventoryReducer,
+		cart: cartReducer,
 	},
 });

@@ -83,11 +83,6 @@ const CreateInventory = () => {
 			<form className="createForm">
 				<h1>Create Inventory</h1>
 
-				<input
-					type="file"
-					name="product_picture"
-					onChange={createProductImageChange}
-				/>
 				<TextField
 					id="outlined-basic"
 					className="top"

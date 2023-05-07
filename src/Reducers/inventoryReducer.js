@@ -13,6 +13,8 @@ import {
 	CREATE_INVENT_SUCCESS,
 	CREATE_INVENT_RESET,
 	CLEAR_ERRORS,
+	ADD_CART_REQUEST,
+	ADD_CART_SUCCESS,
 } from "../Constants/inventoryConstants";
 
 export const inventoryReducer = (state = { inventory: [] }, action) => {
@@ -135,6 +137,39 @@ export const newInventoryReducer = (state = { product: {} }, action) => {
 				...state,
 				error: null,
 			};
+		default:
+			return state;
+	}
+};
+
+export const cartReducer = (state = { cartItems: [] }, action) => {
+	switch (action.type) {
+		case ADD_CART_REQUEST:
+			const item = action.payload;
+			const isItemExist = state.cartItems.find(
+				(i) => i.product === item.product
+			);
+
+			if (isItemExist) {
+				return {
+					...state,
+					cartItems: state.cartItems.map((i) =>
+						i.product === isItemExist.product ? item : i
+					),
+				};
+			} else {
+				return {
+					...state,
+					cartItems: [...state.cartItems, item],
+				};
+			}
+
+		case ADD_CART_SUCCESS:
+			return {
+				...state,
+				cartItems: state.cartItems.filter((i) => i.product !== action.payload),
+			};
+
 		default:
 			return state;
 	}

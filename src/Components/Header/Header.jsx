@@ -30,9 +30,7 @@ function Header() {
 								? { margin: "auto", color: "white !important" }
 								: { marginRight: "auto", color: "white !important" }
 						}
-					>
-						<img src={logo} alt="" id="logo" />
-					</Typography>
+					></Typography>
 					<h3 id="heading-header">GameStart</h3>
 					<section className="icons-section">
 						<Link to="/cart">

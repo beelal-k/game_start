@@ -1,0 +1,166 @@
+.cart-page {
+	padding: 5vmax;
+	margin-top: 1vmax;
+}
+
+.cart-header {
+	background-color: var(--main-color);
+	width: 90%;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: 4fr 1fr 1fr;
+	color: white;
+	margin: auto;
+	font: 300 1em "Roboto";
+}
+
+.cart-header > p {
+	margin: 10px;
+}
+
+.cart-header > p:last-child {
+	text-align: end;
+}
+
+.cart-container {
+	width: 90%;
+	margin: auto;
+	display: grid;
+	grid-template-columns: 4fr 1fr 1fr;
+}
+
+.cart-input {
+	display: flex;
+	height: 8vmax;
+	align-items: center;
+}
+
+.cart-input > button {
+	border: none;
+	background-color: rgba(0, 0, 0, 0.616);
+	padding: 0.5vmax;
+	cursor: pointer;
+	color: white;
+	transition: all 0.5;
+}
+
+.cart-input > button:hover {
+	background-color: rgba(0, 0, 0, 0.767);
+}
+
+.cart-input > input {
+	border: none;
+	font: 400 0.8vmax "Roboto";
+	color: rgba(0, 0, 0, 0.74);
+	padding: 0.5vmax;
+	width: 2vmax;
+	outline: none;
+	text-align: center;
+}
+
+.cart-subtotal {
+	display: flex;
+	padding: 0.5vmax;
+	font: 300 1vmax "Roboto";
+	justify-content: flex-end;
+	color: rgba(0, 0, 0, 0.753);
+	box-sizing: border-box;
+	align-items: center;
+	height: 8vmax;
+}
+
+.cart-gross-profit {
+	display: grid;
+	grid-template-columns: 2fr 1.2fr;
+}
+
+.cart-gross-profit-box {
+	border-top: 3px solid var(--main-color);
+	box-sizing: border-box;
+	margin: 1vmax 4vmax;
+	justify-content: space-between;
+	display: flex;
+	font: 300 1vmax "Roboto";
+	padding: 2vmax 0;
+}
+
+.checkout-button {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.checkout-button > button {
+	background-color: var(--main-color);
+	padding: 0.8vmax 4vmax;
+	border-radius: 30px;
+	color: white;
+	border: none;
+	margin: 1vmax 4vmax;
+	cursor: pointer;
+	font: 300 0.8vmax "Roboto";
+	width: 50%;
+}
+
+@media screen and (max-width: 600px) {
+	.cart-page {
+		padding-top: 13vmax;
+		min-height: 60vh;
+	}
+
+	.cart-header {
+		width: 100%;
+		font: 300 1.7vmax "Roboto";
+		grid-template-columns: 3fr 1fr 1fr;
+	}
+
+	.cart-container {
+		width: 100%;
+		grid-template-columns: 3fr 1fr 1fr;
+	}
+
+	.cart-input {
+		justify-content: center;
+		padding-top: 3vmax;
+		height: 25vmax;
+	}
+
+	.cart-input > button {
+		padding: 1.3vmax;
+	}
+
+	.cart-input > input {
+		padding: 1vmax;
+		font: 400 0.9em "Roboto";
+	}
+
+	.cart-subtotal {
+		padding-top: 6vmax;
+		height: 25vmax;
+		font: 300 0.7em "Roboto";
+	}
+
+	.cart-gross-profit {
+		display: grid;
+		grid-template-columns: 0fr 2fr;
+	}
+
+	.cart-gross-profit-box {
+		padding: 2vmax;
+		font: 300 2vmax "Roboto";
+	}
+
+	.checkout-button > button {
+		padding: 2vmax 4vmax;
+		font: 300 2vmax "Roboto";
+		width: 100%;
+	}
+}
+
+.empty-cart {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: gray;
+	margin-top: 12%;
+}
