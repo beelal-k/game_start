@@ -8,8 +8,8 @@ const { sequelize } = require('./models');
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
-const multer = require('multer')
-const upload = multer({ dest: './uploads/' })
+const multer = require('multer');
+const upload = multer({ dest: './uploads/' });
 const fs = require('fs');
 
 const app = express()
@@ -256,7 +256,7 @@ app.post("/confirm-order", async (req, res) => {
 })
 
 app.post("/create-inventory", upload.single('file'), async (req, res) => {
-    // let imageData = fs.readFileSync(req.file.path);
+    let imageData = fs.readFileSync(req.file.path);
     // db.profile.create({
     //     profile_pic: imageData
     // })
@@ -268,7 +268,7 @@ app.post("/create-inventory", upload.single('file'), async (req, res) => {
         margin: req.body.market_price - req.body.cost_price,
         inventory_type: req.body.inventory_type,
         minimum_age: req.body.minimum_age,
-        // product_picture: imageData
+        product_picture: imageData
     }).then(async (inven) => {
         if (inven.inventory_type == 'video_games') {
             await db.videoGame.create({
