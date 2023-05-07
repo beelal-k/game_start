@@ -1,0 +1,41 @@
+.createForm {
+    /* border: 1px solid red; */
+    padding: 5px;
+    margin: auto;
+    display: grid;
+    grid-template-columns:
+        "top top"
+        "top top"
+        "top top"
+        "bottom bottom"
+    ;
+    gap: 15px;
+    width: 800px;
+    /* 
+    align-self: center;
+    justify-self: center; */
+    /* transform: translate(50%, 200%); */
+    position: absolute;
+    top: 130px;
+    left: 370px;
+}
+
+h1{
+    text-align: center;
+    margin-bottom: 2%;
+}
+
+.top {
+    grid-area: "top";
+}
+
+.bottom {
+    grid-area: "bottom";
+}
+
+.createBtn {
+    align-self: center;
+    justify-self: center;
+    margin: auto;
+    width: 100%;
+}

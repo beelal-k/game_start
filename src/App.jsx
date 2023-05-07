@@ -5,7 +5,9 @@ import Home from "./Pages/Home/Home";
 import Age from "./Pages/Home/Age";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginSignup from "./Components/User/LoginSignup/LoginSignup";
-// import Age from "react-webcam";
+// import { Dashboard } from "@mui/icons-material";
+import Dashboard from './Pages/Home/Dashboard.jsx'
+import CreateInventory from "./Pages/CreateInventory";
 
 function App() {
 	return (
@@ -16,6 +18,8 @@ function App() {
 					<Route element={<Home />} path="/" exact></Route>
 					<Route element={<LoginSignup />} path="/login" exact></Route>
 					<Route element={<Age/>} path="/age" exact></Route>
+					<Route element={<CreateInventory/>} path="/create-inventory" exact></Route>
+					<Route element={<Dashboard/>} path="/dashboard" exact></Route>
 				</Routes>
 			</Router>
 		</>
