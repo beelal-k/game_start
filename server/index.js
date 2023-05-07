@@ -198,7 +198,9 @@ app.post('/add-to-cart', async (req, res) => {
         product_id: req.body.product_id,
         user_id: req.body.user_id
     }).then(async (cart) => {
-        await db.order.findOne({
+        // res.send(cart);
+        temp = cart;
+        await db.order.findAll({
             where: { user_id: cart.user_id }
         }).then(async (user) => {
             temp = user;
@@ -210,6 +212,8 @@ app.post('/add-to-cart', async (req, res) => {
                     order_date: Date.now()
                 }).then((order) => {
                     res.send({ cart, order });
+                }).catch((err) =>{
+                    res.send("another error")
                 })
             }
             else {
@@ -224,10 +228,12 @@ app.post('/add-to-cart', async (req, res) => {
                     res.send("Error occured");
                 })
             }
+        }).catch((err) =>{
+            res.send("Here");
         })
         // res.send(cart);
     }).catch((err) => {
-        res.send("Error");
+        res.send("Last one");
     })
 })
 
@@ -558,9 +564,9 @@ app.post("/update-user", async (req, res) => {
             password: bcrypt.hashSync(req.body.password, 8)
         },
         { where: { id: req.body.user_id } }
-    ).then((user) =>{
+    ).then((user) => {
         res.send("Updated user successfully!");
-    }).catch((err) =>{
+    }).catch((err) => {
         res.send("Could not update user");
     })
 })
