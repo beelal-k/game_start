@@ -33,7 +33,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         product_picture:{
             type: Sequelize.BLOB,
-            allowNull: false
+            allowNull: true
         }
     });
 

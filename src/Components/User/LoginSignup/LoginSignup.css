@@ -1,13 +1,16 @@
 .form-box {
 	margin-top: 80px;
-	width: 320px;
-	height: 600px;
-	background-color: #e5e5e5;
+	width: 600px;
+	height: 550px;
+	/* background-color: #e5e5e5; */
 	position: absolute;
 	left: 50%;
-	top: 50%;
+	top: 45%;
+	border-radius: 5px;
+	padding: 2%;
 	transform: translate(-50%, -50%);
 	overflow: hidden !important;
+	box-shadow: 0px 3px 5px 0px rgb(71, 71, 71);
 }
 
 @media screen and (max-width: 600px) {

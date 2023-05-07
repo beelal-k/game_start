@@ -1,24 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Rating } from "@mui/material";
 import img from "../../assets/1.jpg";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllReviews, clearErrors } from "../../Actions/inventoryActions";
+import { useAlert } from "react-alert";
 
-const ProductCard = ({ width }) => {
+const ProductCard = ({ product, width }) => {
+	const alert = useAlert();
+	const dispatch = useDispatch();
+
+	const { error, reviews } = useSelector((state) => state.reviews);
+
 	const options = {
-		value: 2.5,
+		value: reviews[0].rating,
 		readOnly: true,
 		size: "large",
 		precision: 0.5,
 	};
 
+	let link = `http://localhost:3000/product-reviews/${product.id}`;
+
+	console.log(reviews);
+	useEffect(() => {
+		if (error) {
+			alert.error(error);
+			dispatch(clearErrors());
+		}
+
+		dispatch(getAllReviews(link));
+	}, [dispatch, error, alert]);
+
 	return (
 		<Link
 			className="productCard"
-			to={`/product/$product id}`}
+			to={`/product/${product.id}`}
 			style={{ width }}
 		>
 			<img src={img} alt="product img" style={{ width }} />
-			<p>Gaming Gear</p>
+			<p>{product.title}</p>
 			<div>
 				<Rating {...options} style={{ font: "300 1.2rem 'Roboto'" }} />{" "}
 				<span
@@ -28,10 +48,10 @@ const ProductCard = ({ width }) => {
 						marginLeft: "10px",
 					}}
 				>
-					({1000} Reviews)
+					({reviews.lenght} Reviews)
 				</span>
 			</div>
-			<span>{`$${200}`}</span>
+			<span>{`$${product.market_price}`}</span>
 		</Link>
 	);
 };

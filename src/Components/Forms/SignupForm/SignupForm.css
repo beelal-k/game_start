@@ -23,6 +23,15 @@
 	border-radius: 50%;
 }
 
+.eyeWrapper{
+	position: relative;
+}
+.eyes{
+	position: absolute;
+	top: -47px;
+	right: 20px;
+}
+
 .image-input-box > button {
 	width: 88%;
 	border: none;

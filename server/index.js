@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const multer = require('multer')
 const upload = multer({ dest: './uploads/' })
+const fs = require('fs');
 
 const app = express()
 
@@ -255,7 +256,7 @@ app.post("/confirm-order", async (req, res) => {
 })
 
 app.post("/create-inventory", upload.single('file'), async (req, res) => {
-    let imageData = fs.readFileSync(req.file.path);
+    // let imageData = fs.readFileSync(req.file.path);
     // db.profile.create({
     //     profile_pic: imageData
     // })
@@ -267,9 +268,32 @@ app.post("/create-inventory", upload.single('file'), async (req, res) => {
         margin: req.body.market_price - req.body.cost_price,
         inventory_type: req.body.inventory_type,
         minimum_age: req.body.minimum_age,
-        product_picture: imageData
+        // product_picture: imageData
     }).then(async (inven) => {
-        res.send(inven);
+        if (inven.inventory_type == 'video_games') {
+            await db.videoGame.create({
+                inventory_id: inven.id,
+                developer: req.body.developer,
+                platform: req.body.platform
+            }).then((extra) => {
+                res.send({ inven, extra })
+            }).catch((err) => {
+                res.send("An error ocurred");
+            })
+        }
+        else {
+            await db.gamingGear.create({
+                inventory_id: inven.id,
+                brand: req.body.brand,
+                color: req.body.color
+            }).then((extra) => {
+                res.send({ inven, extra })
+            }).catch((err) => {
+                res.send("An error ocurred");
+            })
+
+        }
+        // res.send(inven);
     }).catch((err) => {
         res.send("Could not create inventory");
     })
@@ -371,7 +395,7 @@ app.get("/email-order-filter/:user_email", async (req, res) => {
 
 app.get("/week-order-filter", async (req, res) => {
 
-    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);  
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
     await db.order.findAll(
         {

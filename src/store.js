@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userReducer } from "./Reducers/userReducer";
-import { getDefaultMiddleware } from "@reduxjs/toolkit";
-
-const customizedMiddleware = getDefaultMiddleware({
-	serializableCheck: false,
-});
+import { inventoryReducer, reviewsReducer } from "./Reducers/inventoryReducer";
 
 export const store = configureStore({
-	reducer: { user: userReducer },
-	middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+	reducer: {
+		user: userReducer,
+		inventory: inventoryReducer,
+		reviews: reviewsReducer,
+	},
 });

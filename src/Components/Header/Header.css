@@ -1,5 +1,5 @@
 #logo {
-	width: 70px;
+	width: 180px;
 	height: auto;
 }
 
@@ -31,8 +31,10 @@
 }
 
 .appbar {
+	/* border:1px solid red ; */
 	background: var(--main-color) !important;
-	height: 63px;
+	padding: 5px;
+	height: 80px;
 	display: flex;
 	justify-content: center;
 	flex-direction: row-reverse;

@@ -16,6 +16,7 @@
 		"@mui/material": "^5.12.3",
 		"@reduxjs/toolkit": "^1.9.5",
 		"axios": "^1.4.0",
+		"face-api.js": "^0.22.2",
 		"js-cookie": "^3.0.5",
 		"react": "^18.2.0",
 		"react-alert": "^7.0.3",
@@ -24,7 +25,9 @@
 		"react-dom": "^18.2.0",
 		"react-loading": "^2.0.3",
 		"react-redux": "^8.0.5",
-		"react-router-dom": "^6.11.1"
+		"react-router-dom": "^6.11.1",
+		"react-webcam": "^7.0.1",
+		"vedansh-face-api": "^0.0.1"
 	},
 	"proxy": "http://localhost:3000",
 	"devDependencies": {

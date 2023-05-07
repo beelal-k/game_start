@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PasswordIcon from "@mui/icons-material/Password";
+import { TextField } from "@mui/material";
 import "./LoginForm.css";
 import { Link } from "react-router-dom";
 import Loader from "../../Loader/Loader";
@@ -48,8 +49,8 @@ const LoginForm = () => {
 				<Loader />
 			) : (
 				<form className="login-form" onSubmit={loginSubmit}>
-					<div className="login-email form-input">
-						<MailOutlineIcon color="action" />
+					{/* <div className="login-email form-input"> */}
+					{/* <MailOutlineIcon color="action" />
 						<input
 							type="email"
 							name="email"
@@ -57,9 +58,11 @@ const LoginForm = () => {
 							placeholder="Email"
 							required
 							onChange={(e) => setLoginEmail(e.target.value)}
-						/>
-					</div>
-					<div className="login-password form-input">
+						/> */}
+					<TextField id="outlined-basic" type="email" placeholder="Email" value={loginEmail} name="email" required onChange={(e) => setLoginEmail(e.target.value)} label="Email" variant="outlined" />
+                    <TextField id="outlined-basic" type="password" placeholder="Password" value={loginPassword} name="password" required onChange={(e) => setLoginPassword(e.target.value)} label="Password" margin="normal" variant="outlined" />
+					{/* </div> */}
+					{/* <div className="login-password form-input">
 						<PasswordIcon color="action" />
 						<input
 							type="password"
@@ -69,7 +72,7 @@ const LoginForm = () => {
 							required
 							onChange={(e) => setLoginPassword(e.target.value)}
 						/>
-					</div>
+					</div> */}
 					<Link to="/password/forgot" className="forgot-pass">
 						Forgot Password?
 					</Link>

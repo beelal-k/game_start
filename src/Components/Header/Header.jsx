@@ -10,7 +10,7 @@ import {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LoginIcon from "@mui/icons-material/Login";
-import logo from "../../assets/logo.svg";
+import logo from "../../assets/gameStartLogo.svg";
 import "./Header.css";
 // import { useSelector } from "react-redux";
 
@@ -33,7 +33,7 @@ function Header() {
 					>
 						<img src={logo} alt="" id="logo" />
 					</Typography>
-					<h3 id="heading-header">GameStart</h3>
+					{/* <h3 id="heading-header">GameStart</h3> */}
 					<section className="icons-section">
 						<Link to="/cart">
 							<ShoppingCartIcon

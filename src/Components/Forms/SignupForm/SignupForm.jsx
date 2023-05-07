@@ -9,6 +9,7 @@ import Loader from "../../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TextField } from "@mui/material";
 
 ////////
 import { clearErrors, register } from "../../../Actions/userActions";
@@ -82,7 +83,7 @@ const RegisterForm = () => {
 					ref={registerTab}
 					onSubmit={registerSubmit}
 				>
-					<div className="register-name form-input">
+					{/* <div className="register-name form-input">
 						<FaceIcon color="action" />
 						<input
 							type="text"
@@ -92,8 +93,9 @@ const RegisterForm = () => {
 							required
 							onChange={registerDataChange}
 						/>
-					</div>
-					<div className="register-email form-input">
+					</div> */}
+					<TextField id="outlined-basic" type="name" placeholder="Username" value={name} name="name" required onChange={registerDataChange} required label="Username" variant="outlined" />
+					{/* <div className="register-email form-input">
 						<MailOutlineIcon color="action" />
 						<input
 							type="email"
@@ -103,8 +105,10 @@ const RegisterForm = () => {
 							required
 							onChange={registerDataChange}
 						/>
-					</div>
-					<div className="register-email form-input">
+					</div> */}
+					<TextField id="outlined-basic" margin="normal" type="email" placeholder="Email" value={email} name="email" required onChange={registerDataChange} required label="Email" variant="outlined" />
+					<TextField id="outlined-basic" margin="dense" type="gender" placeholder="Gender" value={gender} name="gender" required onChange={registerDataChange} required label="Gender" variant="outlined" />
+					{/* <div className="register-email form-input">
 						<MailOutlineIcon color="action" />
 						<input
 							type="text"
@@ -114,14 +118,15 @@ const RegisterForm = () => {
 							required
 							onChange={registerDataChange}
 						/>
-					</div>
+					</div> */}
 
 					<DatePicker
 						selected={startDate}
 						onChange={(date) => setStartDate(date)}
 						className="form-input"
 					/>
-					<div className="register-password form-input">
+					<TextField id="outlined-basic" type={showPassword ? "text" : "password"} placeholder="Password" value={password} name="password" required onChange={registerDataChange} label="Password" margin="normal" variant="outlined" />
+					{/* <div className="register-password form-input">
 						<PasswordIcon color="action" />
 						<input
 							type={showPassword ? "text" : "password"}
@@ -132,10 +137,12 @@ const RegisterForm = () => {
 							required
 							onChange={registerDataChange}
 						/>
+					*/}
+					<div className="eyeWrapper">
 						{showPassword ? (
 							<VisibilityOffIcon
 								color="action"
-								className="cursor-pointer"
+								className="cursor-pointer eyes"
 								onClick={() => {
 									setShowPassword(false);
 								}}
@@ -143,16 +150,17 @@ const RegisterForm = () => {
 						) : (
 							<VisibilityIcon
 								color="action"
-								className="cursor-pointer"
+								className="cursor-pointer eyes"
 								onClick={() => setShowPassword(true)}
 							/>
 						)}
 					</div>
+					{/* // </div> */}
 
 					<button type="submit" className="submitButton form-submit-btn">
 						Register
 					</button>
-				</form>
+				</form >
 			)}
 		</>
 	);
