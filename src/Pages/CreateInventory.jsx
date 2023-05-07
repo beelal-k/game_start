@@ -9,6 +9,7 @@ const CreateInventory = () => {
             <form className='createForm'>
                 <h1>Create Inventory</h1>
 
+                <input type='file' name='product_picture'/>
                 <TextField id="outlined-basic" className='top' type="text" placeholder="Title" value="" name="title" required label="Title" variant="outlined" />
                 <TextField id="outlined-basic" className='top' type="number" placeholder="Quantity" value="" name="quantity" required label="Quantity" variant="outlined" />
                 <TextField id="outlined-basic" className='top' type="number" placeholder="Market Price" value="" name="market_price" required label="Market Price" variant="outlined" />
@@ -35,4 +36,4 @@ const CreateInventory = () => {
     )
 }
 
-export default CreateInventory
+export default CreateInventory;

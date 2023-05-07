@@ -8,21 +8,17 @@ const videoConstraints = {
     height: 400,
     facingMode: 'user',
 }
+const MODEL_URL = '/models'
 
+// faceapi.nets.ageGenderNet.loadFromUri('/models')
 const detectAge = async () => {
+    await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
+    await faceapi.loadAgeGenderModel(MODEL_URL);
+    await faceapi.loadFaceExpressionModel(MODEL_URL);
     const input = document.getElementById('imageInput');
-    const detections1 = await faceapi.detectAllFaces(input, new faceapi.SsdMobilenetv1Options())
-    // const age = await faceapi.detectAllFaces(input).withFaceLandmarks().withAgeAndGender().withFaceDescriptors();
+    const detections1 =  faceapi.detectAllFaces(input, new faceapi.TinyFaceDetectorOptions()).withAgeAndGender();
 
     console.log(detections1);
-    // if (age) {
-    //     const bestMatch = faceMatcher.findBestMatch(age.descriptor)
-    //     console.log(bestMatch.toString())
-    // }
-    // else{
-    //     console.log("nothing");
-
-    // }
 
 }
 
@@ -37,12 +33,6 @@ const Age = () => {
 
     return (
         <>
-            {/* <main id="home">
-                <div id="container" className="container">
-                    <button className="">Verify Age</button>
-                </div>
-            </main> */}
-
             <div>
                 {picture == '' ? (
                     <Webcam

@@ -39,12 +39,6 @@ sequelize.authenticate()
         console.error('Unable to connect to the database:', err);
     });
 
-app.get('/users', async (req, res) => {
-    db.user.findAll()
-        .then((users) => {
-            res.send(users);
-        })
-});
 
 app.post('/login', async (req, res) => {
 
@@ -360,14 +354,6 @@ app.get("/inventory/:id", async (req, res) => {
     })
 })
 
-app.get("/orders", async (req, res) => {
-    await db.order.findAll()
-        .then(async (orders) => {
-            res.send(orders)
-        }).catch((err) => {
-            res.send("Could not get all orders");
-        })
-})
 
 app.get("/email-order-filter/:user_email", async (req, res) => {
 
@@ -450,6 +436,20 @@ app.get("/status-order-filter/:order_status", async (req, res) => {
 
 })
 
+app.get("/type-product-filter/:type", async (req, res) => {
+
+    const type = req.params.type;
+
+    await db.inventory.findAll({
+        where: { inventory_type: type }
+    }).then(async (inven) => {
+        res.send(inven);
+    }).catch((err) => {
+        res.send("Could not find any orders with that status");
+    })
+
+})
+
 app.get("/date-order-filter/:order_date", async (req, res) => {
 
     const date = req.params.date;
@@ -494,6 +494,77 @@ app.post("/unblacklist-user/:id", async (req, res) => {
             res.send("Could not un-blacklist user");
         })
 })
+
+// admin side listings
+
+app.get("/reviews-listing", async (req, res) => {
+    await db.review.findAll()
+        .then((reviews) => {
+            res.send(reviews);
+        })
+        .catch((err) => {
+            res.send("Could not get reviews");
+        })
+})
+
+app.get('/users-listing', async (req, res) => {
+    db.user.findAll()
+        .then((users) => {
+            res.send(users);
+        })
+});
+
+app.get('/query-listing', async (req, res) => {
+    db.query.findAll()
+        .then((queries) => {
+            res.send(queries);
+        })
+});
+
+app.get("/orders-listing", async (req, res) => {
+    await db.order.findAll()
+        .then(async (orders) => {
+            res.send(orders)
+        }).catch((err) => {
+            res.send("Could not get all orders");
+        })
+})
+
+// single listings
+
+app.get("/get-user/:id", async (req, res) => {
+
+    const id = req.params.id;
+
+    await db.user.findOne({
+        where: { id: id }
+    })
+        .then(async (user) => {
+            res.send(user)
+        }).catch((err) => {
+            res.send("Could not get all orders");
+        })
+})
+
+// update functions
+
+app.post("/update-user", async (req, res) => {
+    await db.user.update(
+        {
+            name: req.body.name,
+            email: req.body.email,
+            dob: req.body.dob,
+            gender: req.body.gender,
+            password: bcrypt.hashSync(req.body.password, 8)
+        },
+        { where: { id: req.body.user_id } }
+    ).then((user) =>{
+        res.send("Updated user successfully!");
+    }).catch((err) =>{
+        res.send("Could not update user");
+    })
+})
+
 
 
 db.sequelize.sync({ force: false }).then(function () {
