@@ -8,8 +8,8 @@ const { sequelize } = require('./models');
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
-const multer = require('multer');
-const upload = multer({ dest: './uploads/' });
+const multer = require('multer')
+const upload = multer({ dest: './uploads/' })
 const fs = require('fs');
 
 const app = express()

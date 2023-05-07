@@ -1,0 +1,8 @@
+.inventory_main {
+	display: grid;
+	grid-template-columns: 1fr 6.5fr;
+}
+
+table {
+	/* border: 1px solid red; */
+}
