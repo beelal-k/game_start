@@ -8,17 +8,20 @@ const videoConstraints = {
     height: 400,
     facingMode: 'user',
 }
-const MODEL_URL = '/models'
+const MODEL_URL = './models';
+const input = document.getElementById('imageInput');
 
 // faceapi.nets.ageGenderNet.loadFromUri('/models')
-const detectAge = async () => {
-    await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
-    await faceapi.loadAgeGenderModel(MODEL_URL);
-    await faceapi.loadFaceExpressionModel(MODEL_URL);
-    const input = document.getElementById('imageInput');
-    const detections1 =  faceapi.detectAllFaces(input, new faceapi.TinyFaceDetectorOptions()).withAgeAndGender();
+await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
+await faceapi.loadFaceLandmarkModel(MODEL_URL);
+await faceapi.loadFaceRecognitionModel(MODEL_URL);
 
-    console.log(detections1);
+const detectAge = async () => {
+
+    let fullFaceDescriptions = await faceapi.detectAllFaces(input).withFaceLandmarks().withFaceDescriptors();
+    fullFaceDescriptions = faceapi.resizeResults(fullFaceDescriptions)
+
+    console.log(fullFaceDescriptions);
 
 }
 
@@ -34,6 +37,7 @@ const Age = () => {
     return (
         <>
             <div>
+
                 {picture == '' ? (
                     <Webcam
                         audio={false}
@@ -46,6 +50,8 @@ const Age = () => {
                 ) : (
                     <img src={picture} onInput={detectAge} id="imageInput" />
                 )}
+                <img src={picture} onInput={detectAge} id="imageInput" />
+
             </div>
             <div>
                 {picture != '' ? (
